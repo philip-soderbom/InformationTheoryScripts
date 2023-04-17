@@ -1,0 +1,44 @@
+function C=Huffman(D)
+% Generates Huffman codes for the given distribution
+%
+% D: A two dimensional cell array containing the letters in the first
+% column and their probabilities in the second column.
+
+
+% Uses Huffmans algorithm to generate a binary tree (as a string) to
+% represent the code.
+while size(D) > 1
+    % Sort on probability, least probable are placed first (at the head of the list)
+    D = sortrows(D, 2);
+    % Get 2 least probable from D and make them a new node
+    leaf1 = 
+    new = [{['(' cell2mat(D(1, 1)) ',' cell2mat(D(2, 1)) ')']} {cell2mat(D(1, 2)) + cell2mat(D(2, 2))}];
+    % Remove them and add as one element.
+    D(1, :)=[];
+    D(1, :)=new;
+end
+
+
+% Parses the tree-string to get the codes.
+d=cell2mat(D(1));
+code='';
+keys=[];
+vals=[];
+for i=(length(d)):-1:1
+    if d(i)==')'
+        code=[code '0'];
+    elseif d(i)=='(' && ~isempty(code)
+        code(end)=[];
+    elseif d(i)==',' && ~isempty(code)
+        code(end)= '1';
+    elseif d(i)==','
+        code='1';
+    else
+        keys=[keys;{d(i)}];
+        vals=[vals;{code}];
+    end
+end
+
+map = [keys, vals]
+C=containers.Map(keys, vals);
+end
